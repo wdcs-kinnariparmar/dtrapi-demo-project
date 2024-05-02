@@ -362,6 +362,119 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
+export interface ApiLeadLead extends Schema.CollectionType {
+  collectionName: 'leads';
+  info: {
+    singularName: 'lead';
+    pluralName: 'leads';
+    displayName: 'Lead';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    full_name: Attribute.String & Attribute.Required;
+    email: Attribute.Email;
+    mobile: Attribute.String;
+    address: Attribute.Text;
+    area: Attribute.String;
+    city: Attribute.String;
+    pincode: Attribute.Integer;
+    source_name: Attribute.String;
+    broker_name: Attribute.String;
+    inquired_by: Attribute.String;
+    organization: Attribute.Relation<
+      'api::lead.lead',
+      'manyToOne',
+      'api::organization.organization'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::lead.lead', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::lead.lead', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiOrganizationOrganization extends Schema.CollectionType {
+  collectionName: 'organizations';
+  info: {
+    singularName: 'organization';
+    pluralName: 'organizations';
+    displayName: 'Organization';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    organization_name: Attribute.String & Attribute.Required;
+    users: Attribute.Relation<
+      'api::organization.organization',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    admin_users: Attribute.Relation<
+      'api::organization.organization',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    leads: Attribute.Relation<
+      'api::organization.organization',
+      'oneToMany',
+      'api::lead.lead'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::organization.organization',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::organization.organization',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiUserJourneyUserJourney extends Schema.CollectionType {
+  collectionName: 'user_journeys';
+  info: {
+    singularName: 'user-journey';
+    pluralName: 'user-journeys';
+    displayName: 'User_Journey';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required;
+    note: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::user-journey.user-journey',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::user-journey.user-journey',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -724,6 +837,16 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    organization: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::organization.organization'
+    >;
+    organization_name: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::organization.organization'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -798,6 +921,9 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
+      'api::lead.lead': ApiLeadLead;
+      'api::organization.organization': ApiOrganizationOrganization;
+      'api::user-journey.user-journey': ApiUserJourneyUserJourney;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;

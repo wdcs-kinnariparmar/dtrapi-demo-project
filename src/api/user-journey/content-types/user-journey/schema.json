@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_journeys",
+  "info": {
+    "singularName": "user-journey",
+    "pluralName": "user-journeys",
+    "displayName": "User_Journey"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "note": {
+      "type": "text"
+    }
+  }
+}
