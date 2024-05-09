@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_dynamic_fields_dynamic_fields",
+  "info": {
+    "displayName": "DynamicField",
+    "icon": "bulletList",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "text",
+        "email",
+        "number",
+        "boolean",
+        "select",
+        "password"
+      ]
+    },
+    "options": {
+      "type": "json"
+    }
+  }
+}

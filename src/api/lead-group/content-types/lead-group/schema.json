@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lead_groups",
+  "info": {
+    "singularName": "lead-group",
+    "pluralName": "lead-groups",
+    "displayName": "Lead Group"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "group_name": {
+      "type": "string",
+      "required": true
+    },
+    "lead_managements": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lead-management.lead-management",
+      "mappedBy": "lead_group"
+    }
+  }
+}

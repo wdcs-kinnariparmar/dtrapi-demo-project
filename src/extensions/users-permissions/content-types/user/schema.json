@@ -9,8 +9,7 @@
     "displayName": "User"
   },
   "options": {
-    "draftAndPublish": false,
-    "timestamps": true
+    "draftAndPublish": false
   },
   "attributes": {
     "username": {
@@ -66,17 +65,24 @@
       "inversedBy": "users",
       "configurable": false
     },
+    "related_users": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user"
+    },
+    "subscriberType": {
+      "type": "enumeration",
+      "enum": [
+        "FreeUser",
+        "PaidUser"
+      ],
+      "required": true
+    },
     "organization": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::organization.organization",
-      "mappedBy": "users"
-    },
-    "organization_name": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::organization.organization",
-      "mappedBy": "admin_users"
+      "inversedBy": "users"
     }
   }
 }

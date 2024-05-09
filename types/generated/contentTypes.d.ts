@@ -362,119 +362,6 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
-export interface ApiLeadLead extends Schema.CollectionType {
-  collectionName: 'leads';
-  info: {
-    singularName: 'lead';
-    pluralName: 'leads';
-    displayName: 'Lead';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    full_name: Attribute.String & Attribute.Required;
-    email: Attribute.Email;
-    mobile: Attribute.String;
-    address: Attribute.Text;
-    area: Attribute.String;
-    city: Attribute.String;
-    pincode: Attribute.Integer;
-    source_name: Attribute.String;
-    broker_name: Attribute.String;
-    inquired_by: Attribute.String;
-    organization: Attribute.Relation<
-      'api::lead.lead',
-      'manyToOne',
-      'api::organization.organization'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::lead.lead', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<'api::lead.lead', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-  };
-}
-
-export interface ApiOrganizationOrganization extends Schema.CollectionType {
-  collectionName: 'organizations';
-  info: {
-    singularName: 'organization';
-    pluralName: 'organizations';
-    displayName: 'Organization';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    organization_name: Attribute.String & Attribute.Required;
-    users: Attribute.Relation<
-      'api::organization.organization',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    admin_users: Attribute.Relation<
-      'api::organization.organization',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    leads: Attribute.Relation<
-      'api::organization.organization',
-      'oneToMany',
-      'api::lead.lead'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::organization.organization',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::organization.organization',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiUserJourneyUserJourney extends Schema.CollectionType {
-  collectionName: 'user_journeys';
-  info: {
-    singularName: 'user-journey';
-    pluralName: 'user-journeys';
-    displayName: 'User_Journey';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    title: Attribute.String & Attribute.Required;
-    note: Attribute.Text;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::user-journey.user-journey',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::user-journey.user-journey',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -703,6 +590,53 @@ export interface PluginContentReleasesReleaseAction
   };
 }
 
+export interface PluginI18NLocale extends Schema.CollectionType {
+  collectionName: 'i18n_locale';
+  info: {
+    singularName: 'locale';
+    pluralName: 'locales';
+    collectionName: 'locales';
+    displayName: 'Locale';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    name: Attribute.String &
+      Attribute.SetMinMax<
+        {
+          min: 1;
+          max: 50;
+        },
+        number
+      >;
+    code: Attribute.String & Attribute.Unique;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'plugin::i18n.locale',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'plugin::i18n.locale',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginUsersPermissionsPermission
   extends Schema.CollectionType {
   collectionName: 'up_permissions';
@@ -808,7 +742,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -837,14 +770,16 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    related_users: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    subscriberType: Attribute.Enumeration<['FreeUser', 'PaidUser']> &
+      Attribute.Required;
     organization: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
-      'api::organization.organization'
-    >;
-    organization_name: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToOne',
+      'manyToOne',
       'api::organization.organization'
     >;
     createdAt: Attribute.DateTime;
@@ -864,46 +799,224 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
-export interface PluginI18NLocale extends Schema.CollectionType {
-  collectionName: 'i18n_locale';
+export interface ApiLeadLead extends Schema.CollectionType {
+  collectionName: 'leads';
   info: {
-    singularName: 'locale';
-    pluralName: 'locales';
-    collectionName: 'locales';
-    displayName: 'Locale';
+    singularName: 'lead';
+    pluralName: 'leads';
+    displayName: 'Lead';
     description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    full_name: Attribute.String;
+    email: Attribute.Email;
+    mobile: Attribute.String;
+    address: Attribute.Text;
+    area: Attribute.String;
+    city: Attribute.String;
+    pincode: Attribute.Integer;
+    source_name: Attribute.String;
+    broker_name: Attribute.String;
+    inquired_by: Attribute.String;
+    organizations: Attribute.Relation<
+      'api::lead.lead',
+      'manyToMany',
+      'api::organization.organization'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::lead.lead', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::lead.lead', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiLeadGroupLeadGroup extends Schema.CollectionType {
+  collectionName: 'lead_groups';
+  info: {
+    singularName: 'lead-group';
+    pluralName: 'lead-groups';
+    displayName: 'Lead Group';
   };
   options: {
     draftAndPublish: false;
   };
-  pluginOptions: {
-    'content-manager': {
-      visible: false;
-    };
-    'content-type-builder': {
-      visible: false;
-    };
-  };
   attributes: {
-    name: Attribute.String &
-      Attribute.SetMinMax<
-        {
-          min: 1;
-          max: 50;
-        },
-        number
-      >;
-    code: Attribute.String & Attribute.Unique;
+    group_name: Attribute.String & Attribute.Required;
+    lead_managements: Attribute.Relation<
+      'api::lead-group.lead-group',
+      'oneToMany',
+      'api::lead-management.lead-management'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'plugin::i18n.locale',
+      'api::lead-group.lead-group',
       'oneToOne',
       'admin::user'
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'plugin::i18n.locale',
+      'api::lead-group.lead-group',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiLeadManagementLeadManagement extends Schema.CollectionType {
+  collectionName: 'lead_managements';
+  info: {
+    singularName: 'lead-management';
+    pluralName: 'lead-managements';
+    displayName: 'Lead Management';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    field_name: Attribute.String & Attribute.Required;
+    is_required: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
+    is_sortable: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<true>;
+    type: Attribute.Component<'dynamic-fields.dynamic-field'> &
+      Attribute.Required;
+    lead_group: Attribute.Relation<
+      'api::lead-management.lead-management',
+      'manyToOne',
+      'api::lead-group.lead-group'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::lead-management.lead-management',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::lead-management.lead-management',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiOrganizationOrganization extends Schema.CollectionType {
+  collectionName: 'organizations';
+  info: {
+    singularName: 'organization';
+    pluralName: 'organizations';
+    displayName: 'Organization';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    organization_name: Attribute.String & Attribute.Required;
+    admin_users: Attribute.Relation<
+      'api::organization.organization',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    leads: Attribute.Relation<
+      'api::organization.organization',
+      'manyToMany',
+      'api::lead.lead'
+    >;
+    users: Attribute.Relation<
+      'api::organization.organization',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::organization.organization',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::organization.organization',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiSubscriptionSubscription extends Schema.CollectionType {
+  collectionName: 'subscriptions';
+  info: {
+    singularName: 'subscription';
+    pluralName: 'subscriptions';
+    displayName: 'Subscription';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    startDate: Attribute.DateTime & Attribute.Required;
+    endDate: Attribute.DateTime & Attribute.Required;
+    status: Attribute.Enumeration<['active', 'inactive']> & Attribute.Required;
+    userId: Attribute.Relation<
+      'api::subscription.subscription',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::subscription.subscription',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::subscription.subscription',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiUserJourneyUserJourney extends Schema.CollectionType {
+  collectionName: 'user_journeys';
+  info: {
+    singularName: 'user-journey';
+    pluralName: 'user-journeys';
+    displayName: 'User_Journey';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required;
+    note: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::user-journey.user-journey',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::user-journey.user-journey',
       'oneToOne',
       'admin::user'
     > &
@@ -921,17 +1034,20 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'api::lead.lead': ApiLeadLead;
-      'api::organization.organization': ApiOrganizationOrganization;
-      'api::user-journey.user-journey': ApiUserJourneyUserJourney;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
+      'plugin::i18n.locale': PluginI18NLocale;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'plugin::i18n.locale': PluginI18NLocale;
+      'api::lead.lead': ApiLeadLead;
+      'api::lead-group.lead-group': ApiLeadGroupLeadGroup;
+      'api::lead-management.lead-management': ApiLeadManagementLeadManagement;
+      'api::organization.organization': ApiOrganizationOrganization;
+      'api::subscription.subscription': ApiSubscriptionSubscription;
+      'api::user-journey.user-journey': ApiUserJourneyUserJourney;
     }
   }
 }

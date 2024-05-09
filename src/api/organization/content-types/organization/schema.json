@@ -4,11 +4,10 @@
   "info": {
     "singularName": "organization",
     "pluralName": "organizations",
-    "displayName": "Organization",
-    "description": ""
+    "displayName": "Organization"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -16,22 +15,21 @@
       "type": "string",
       "required": true
     },
-    "users": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "organization"
-    },
     "admin_users": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "organization_name"
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user"
     },
     "leads": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToMany",
       "target": "api::lead.lead",
+      "inversedBy": "organizations"
+    },
+    "users": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user",
       "mappedBy": "organization"
     }
   }

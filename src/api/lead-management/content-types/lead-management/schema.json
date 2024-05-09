@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lead_managements",
+  "info": {
+    "singularName": "lead-management",
+    "pluralName": "lead-managements",
+    "displayName": "Lead Management"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "field_name": {
+      "type": "string",
+      "required": true
+    },
+    "is_required": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "is_sortable": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "type": {
+      "type": "component",
+      "repeatable": false,
+      "component": "dynamic-fields.dynamic-field",
+      "required": true
+    },
+    "lead_group": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::lead-group.lead-group",
+      "inversedBy": "lead_managements"
+    }
+  }
+}

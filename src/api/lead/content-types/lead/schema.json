@@ -4,7 +4,8 @@
   "info": {
     "singularName": "lead",
     "pluralName": "leads",
-    "displayName": "Lead"
+    "displayName": "Lead",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -13,7 +14,7 @@
   "attributes": {
     "full_name": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "email": {
       "type": "email"
@@ -42,11 +43,11 @@
     "inquired_by": {
       "type": "string"
     },
-    "organization": {
+    "organizations": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::organization.organization",
-      "inversedBy": "leads"
+      "mappedBy": "leads"
     }
   }
 }
